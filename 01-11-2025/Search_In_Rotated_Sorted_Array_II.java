@@ -11,11 +11,12 @@ public class Search_In_Rotated_Sorted_Array_II {
 
         int mid, start, end = nums.length-1;
 
-        if(nums[ind] > target)
-            mid =
+//        if(nums[ind] > target)
+//            mid =
+//
+//        while()
 
-        while()
-
+        return false;
     }
     public static void main(String[] args) {
         int[] arr = new int[]{2,5,6,0,0,1,2};
