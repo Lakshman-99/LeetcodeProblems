@@ -13,7 +13,7 @@ public class Title_Helper {
         return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Search in Rotated Sorted Array II\n";
+        String input = "Subarray with given XOR";
         String result = manipulateString(input);
         System.out.println(result);
     }
