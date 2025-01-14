@@ -13,7 +13,7 @@ public class Title_Helper {
         return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Longest Substring Without Repeating Characters\n";
+        String input = "Remove Nth Node From End of List\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
