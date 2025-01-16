@@ -13,7 +13,7 @@ public class Title_Helper {
         return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Reverse Nodes in k_Group\n";
+        String input = "Max Consecutive Ones\n";
         String result = manipulateString(input);
         System.out.println(result);
     }

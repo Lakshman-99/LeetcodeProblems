@@ -13,19 +13,16 @@ public class Reverse_Nodes_In_K_Group {
         dummy.next = head;
         ListNode prev = dummy, curr = head;
 
-        // Count the number of nodes in the list
         int count = 0;
         while (curr != null) {
             count++;
             curr = curr.next;
         }
 
-        // Reverse k nodes at a time
         while (count >= k) {
             curr = prev.next;
             ListNode next = curr.next;
 
-            // Reverse k nodes
             for (int i = 1; i < k; i++) {
                 curr.next = next.next;
                 next.next = prev.next;
