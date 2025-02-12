@@ -7,6 +7,7 @@ public class LFUCache {
         int freq;
         Node next;
         Node prev;
+
         public Node(int key, int value) {
             this.key = key;
             this.value = value;
@@ -15,103 +16,138 @@ public class LFUCache {
             this.prev = null;
         }
     }
+
     public static class DoubleLL {
         Node head;
         Node tail;
+
         public DoubleLL() {
             this.head = new Node(-1, -1);
             this.tail = new Node(-1, -1);
             this.head.next = tail;
             this.tail.prev = head;
         }
+
         public boolean isEmpty() {
-            return head.next == tail && tail.prev == head;
+            return head.next == tail;
+        }
+
+        public void addToHead(Node node) {
+            node.next = head.next;
+            node.prev = head;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        public void removeNode(Node node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
     }
+
     HashMap<Integer, Node> map;
-    HashMap<Integer, DoubleLL> list;
-    int freq;
+    HashMap<Integer, DoubleLL> freqMap;
+    int minFreq;
     int capacity;
 
     public LFUCache(int capacity) {
-        map = new HashMap<>();
-        list = new HashMap<>();
-        this.freq = 1;
+        this.map = new HashMap<>();
+        this.freqMap = new HashMap<>();
+        this.minFreq = 1;
         this.capacity = capacity;
     }
 
     public int get(int key) {
-        if(map.containsKey(key)) {
-            Node node = map.get(key);
-            remove(node);
-            insert(node, key, node.value);
-            return node.value;
+        if (!map.containsKey(key)) {
+            return -1;
         }
-        return -1;
+        Node node = map.get(key);
+        updateNode(node);
+        return node.value;
     }
 
     public void put(int key, int value) {
-        if(map.containsKey(key)) {
-            remove(map.get(key));
-        }
-        if(map.size() >= capacity) {
-            remove(list.get(freq).tail.prev);
-        }
-        insert(map.getOrDefault(key, null), key, value);
-    }
+        if (capacity == 0) return;
 
-    public void remove(Node node) {
-        if(node == null) return;
-        map.remove(node.key);
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-    }
-
-    public void insert(Node node, int key, int value) {
-        if(node == null) {
-            node = new Node(key, value);
-            freq = 1;
-        } else {
-            node.freq += 1;
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
             node.value = value;
+            updateNode(node);
+        } else {
+            if (map.size() >= capacity) {
+                DoubleLL minFreqList = freqMap.get(minFreq);
+                Node toRemove = minFreqList.tail.prev;
+                minFreqList.removeNode(toRemove);
+                map.remove(toRemove.key);
+            }
+            Node newNode = new Node(key, value);
+            map.put(key, newNode);
+            DoubleLL newList = freqMap.getOrDefault(1, new DoubleLL());
+            newList.addToHead(newNode);
+            freqMap.put(1, newList);
+            minFreq = 1;
         }
-        int nodeFreq = node.freq;
+    }
 
-        DoubleLL dll = list.get(nodeFreq);
-        if(dll == null) {
-            dll = new DoubleLL();
-            list.put(nodeFreq, dll);
+    private void updateNode(Node node) {
+        int currentFreq = node.freq;
+        DoubleLL currentList = freqMap.get(currentFreq);
+        currentList.removeNode(node);
+
+        if (currentFreq == minFreq && currentList.isEmpty()) {
+            minFreq++;
         }
 
-        node.next = dll.head.next;
-        node.next.prev = node;
-        dll.head.next = node;
-        node.prev = dll.head;
-
-        map.put(key, node);
-
-        if(list.get(freq).isEmpty()) {
-            freq++;
-        }
+        node.freq++;
+        DoubleLL newList = freqMap.getOrDefault(node.freq, new DoubleLL());
+        newList.addToHead(node);
+        freqMap.put(node.freq, newList);
     }
 
     public static void main(String[] args) {
-        // Creating an LFUCache instance with a capacity of 3
-        LFUCache obj = new LFUCache(2);
+        // Initialize the cache with capacity 10
+        LFUCache cache = new LFUCache(10);
 
-        // Performing the operations as per the input
-        obj.put(1, 1);       // Put (1, 1)
-        obj.put(2, 2);       // Put (2, 2)
-        System.out.println(obj.get(1)); // Get key 1, should return 1
+        // Arrays of operations and values
+        String[] operations = {
+                "put", "put", "put", "put", "put", "get", "put", "get", "get", "put",
+                "get", "put", "put", "put", "get", "put", "get", "get", "get", "get",
+                "put", "put", "get", "get", "get", "put", "put", "get", "put", "get",
+                "put", "get", "get", "get", "put", "put", "put", "get", "put", "get",
+                "get", "put", "put", "get", "put", "put", "put", "put", "get", "put",
+                "put", "get", "put", "put", "get", "put", "put", "put", "put", "put",
+                "get", "put", "put", "get", "put", "get", "get", "get", "put", "get",
+                "get", "put", "put", "put", "put", "get", "put", "put", "put", "put",
+                "get", "get", "get", "put", "put", "put", "get", "put", "put", "put",
+                "get", "put", "put", "put", "get", "get", "get", "put", "put", "put",
+                "put", "get", "put", "put", "put", "put", "put", "put", "put"
+        };
 
-        obj.put(3, 3);       // Put (3, 3)
-        System.out.println(obj.get(2)); // Get key 2, should return -1 (2 was evicted)
+        int[][] values = {
+                {10, 13}, {3, 17}, {6, 11}, {10, 5}, {9, 10}, {13}, {2, 19}, {2}, {3}, {5, 25},
+                {8}, {9, 22}, {5, 5}, {1, 30}, {11}, {9, 12}, {7}, {5}, {8}, {9},
+                {4, 30}, {9, 3}, {9}, {10}, {10}, {6, 14}, {3, 1}, {3}, {10, 11}, {8},
+                {2, 14}, {1}, {5}, {4}, {11, 4}, {12, 24}, {5, 18}, {13}, {7, 23}, {8},
+                {12}, {3, 27}, {2, 12}, {5}, {2, 9}, {13, 4}, {8, 18}, {1, 7}, {6}, {9, 29},
+                {8, 21}, {5}, {6, 30}, {1, 12}, {10}, {4, 15}, {7, 22}, {11, 26}, {8, 17}, {9, 29},
+                {5}, {3, 4}, {11, 30}, {12}, {4, 29}, {3}, {9}, {6}, {3, 4}, {1}, {10},
+                {3, 29}, {10, 28}, {1, 20}, {11, 13}, {3}, {3, 12}, {3, 8}, {10, 9}, {3, 26}, {8},
+                {7}, {5}, {13, 17}, {2, 27}, {11, 15}, {12}, {9, 19}, {2, 15}, {3, 16}, {1},
+                {12, 17}, {9, 1}, {6, 19}, {4}, {5}, {5}, {8, 1}, {11, 7}, {5, 2}, {9, 28},
+                {1}, {2, 2}, {7, 4}, {4, 22}, {7, 24}, {9, 26}, {13, 28}, {11, 26}
+        };
 
-        System.out.println(obj.get(3)); // Get key 3, should return 3
-        obj.put(4, 4);       // Put (4, 4) - evicts least frequently used key (1)
+        // Process each operation
+        for (int i = 0; i < operations.length; i++) {
+            String operation = operations[i];
+            int[] value = values[i];
 
-        System.out.println(obj.get(1)); // Get key 1, should return -1 (evicted)
-        System.out.println(obj.get(3)); // Get key 3, should return 3
-        System.out.println(obj.get(4)); // Get key 4, should return 4
+            if (operation.equals("put")) {
+                cache.put(value[0], value[1]);
+            } else if (operation.equals("get")) {
+                int result = cache.get(value[0]);
+                System.out.println(result + "  -> get(" + value[0] + ")");
+            }
+        }
     }
 }
