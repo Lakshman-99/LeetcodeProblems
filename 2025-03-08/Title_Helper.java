@@ -13,7 +13,7 @@ public class Title_Helper {
         return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Compare Version Numbers\n";
+        String input = "Vertical Order Traversal of a Binary Tree\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
