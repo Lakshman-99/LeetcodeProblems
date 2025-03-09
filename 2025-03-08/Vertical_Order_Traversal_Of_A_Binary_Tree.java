@@ -8,18 +8,23 @@ public class Vertical_Order_Traversal_Of_A_Binary_Tree {
         Queue<Object[]> q = new LinkedList<>();
         q.offer(new Object[]{root, 0});
 
+        int row = 0;
         while(!q.isEmpty()) {
-            Object[] obj = q.poll();
-            TreeNode node = (TreeNode) obj[0];
-            int level = (int) obj[1];
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                Object[] obj = q.poll();
+                TreeNode node = (TreeNode) obj[0];
+                int level = (int) obj[1];
 
-            map.computeIfAbsent(level, A -> new ArrayList<>()).add(new int[]{node.val, level});
+                map.computeIfAbsent(level, A -> new ArrayList<>()).add(new int[]{node.val, row});
 
-            if(node.left != null)
-                q.offer(new Object[]{node.left, level-1});
+                if (node.left != null)
+                    q.offer(new Object[]{node.left, level - 1});
 
-            if(node.right != null)
-                q.offer(new Object[]{node.right, level+1});
+                if (node.right != null)
+                    q.offer(new Object[]{node.right, level + 1});
+            }
+            row++;
         }
 
         List<List<Integer>> ans = new ArrayList<>();
