@@ -12,7 +12,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Binary Tree Level Order Traversal\n";
+        String input = "Lowest Common Ancestor of a Binary Tree\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
