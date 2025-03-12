@@ -12,7 +12,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Remove Duplicates from Sorted List\n";
+        String input = "Flatten Binary Tree to Linked List\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
