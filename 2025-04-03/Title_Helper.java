@@ -12,7 +12,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "All Nodes Distance K in Binary Tree\n";
+        String input = "Diameter of Binary Tree\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
