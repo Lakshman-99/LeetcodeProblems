@@ -2,16 +2,14 @@ package amazon;
 
 public class Max_Chunks_To_Make_Sorted {
     public static int maxChunksToSorted(int[] arr) {
-        int result = 1, max = arr[0];
+        int result=0, expSum=0, sum=0;
 
-        for(int i=0;i<arr.length-1;i++) {
-            if(arr[i] > arr[i+1] || max > arr[i+1]) {
-                max = Math.max(max, arr[i]);
-                continue;
-            }
+        for(int i=0;i<arr.length;i++) {
+            expSum += i;
+            sum += arr[i];
 
-            result++;
-            max = arr[i];
+            if(expSum == sum)
+                result++;
         }
 
         return result;

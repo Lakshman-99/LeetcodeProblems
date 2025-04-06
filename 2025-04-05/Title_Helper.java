@@ -12,7 +12,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Max Chunks To Make Sorted\n";
+        String input = "Number of Substrings Containing All Three Characters";
         String result = manipulateString(input);
         System.out.println(result);
     }
