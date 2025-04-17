@@ -12,7 +12,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Find a Safe Walk Through a Grid\n";
+        String input = "Maximum Number of Points with Cost\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
