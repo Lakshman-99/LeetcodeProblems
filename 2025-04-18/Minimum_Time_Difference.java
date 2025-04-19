@@ -7,22 +7,20 @@ public class Minimum_Time_Difference {
 
         for(int i=0;i<n;i++) {
             String point = timePoints.get(i);
-            int time = 0;
-            for(char c : point.toCharArray()) {
-                if(c == ':') continue;
-                time = time*10 + (c-'0');
-            }
-            diff[i] = 2400 - time;
+            int time = Integer.parseInt(point.substring(0,2))*60 + Integer.parseInt(point.substring(3));
+            diff[i] = time;
+        }
+        Arrays.sort(diff);
+
+        int minDiff = 2400;
+        for(int i=1;i<n;i++) {
+            minDiff = Math.min(minDiff, diff[i]-diff[i-1]);
         }
 
-        Arrays.sort(diff);
-        int minDiff = 2400;
-
-
-        return 0;
+        return Math.min(minDiff, 24*60 - diff[n-1] + diff[0]);
     }
     public static void main(String[] args) {
-        List<String> times = Arrays.asList("00:00","22:59","00:00","02:00","22:58");
+        List<String> times = Arrays.asList("00:00","23:59");
         System.out.println(findMinDifference(times));
     }
 }
