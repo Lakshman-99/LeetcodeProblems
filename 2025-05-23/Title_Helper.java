@@ -1,0 +1,19 @@
+public class Title_Helper {
+    public static String manipulateString(String input) {
+        String[] words = input.trim().split("\\s+");
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i].replace('-', '_');
+            if (i > 0) {
+                result.append("_");
+            }
+            result.append(Character.toUpperCase(word.charAt(0)))
+                    .append(word.substring(1));
+        }        return result.toString();
+    }
+    public static void main(String[] args) {
+        String input = "Step-By-Step Directions From a Binary Tree Node to Another\n";
+        String result = manipulateString(input);
+        System.out.println(result);
+    }
+}
