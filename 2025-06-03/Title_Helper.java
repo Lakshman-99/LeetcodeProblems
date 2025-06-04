@@ -13,7 +13,7 @@ public class Title_Helper {
         }        return result.toString();
     }
     public static void main(String[] args) {
-        String input = "Fruit Into Baskets\n";
+        String input = "Find All Anagrams in a String\n";
         String result = manipulateString(input);
         System.out.println(result);
     }
