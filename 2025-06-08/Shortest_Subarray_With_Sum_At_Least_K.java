@@ -1,24 +1,28 @@
 package patterns.sliding_window;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class Shortest_Subarray_With_Sum_At_Least_K {
     public static int shortestSubarray(int[] nums, int k) {
         if(nums == null || nums.length == 0) {
             return 0;
         }
-        int[] prefix = new int[nums.length];
-        int total = 0;
+        long[] prefix = new long[nums.length + 1];
         for(int i=0;i<nums.length;i++) {
-            prefix[i] = total + nums[i];
-            total = prefix[i];
+            prefix[i+1] = prefix[i] + nums[i];
         }
 
-        int left = 0, sum = 0, answer = Integer.MAX_VALUE;
-        for(int right=0;right<nums.length;right++) {
-            sum += nums[right];
-            while(sum >= k || (left < right && sum - nums[left] >= k)) {
-                answer = Math.min(answer, right-left+1);
-                sum -= nums[left++];
+        int answer = Integer.MAX_VALUE;
+        Deque<Integer> dq = new LinkedList<>();
+        for(int right=0;right<nums.length+1;right++) {
+            while(!dq.isEmpty() && prefix[right] - prefix[dq.peekFirst()] >= k) {
+                answer = Math.min(answer, right - dq.pollFirst());
             }
+            while(!dq.isEmpty() && prefix[right] <= prefix[dq.getLast()]) {
+                dq.pollLast();
+            }
+            dq.addLast(right);
         }
 
         return answer == Integer.MAX_VALUE ? -1 : answer;
