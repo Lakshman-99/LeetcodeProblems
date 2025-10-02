@@ -1,5 +1,8 @@
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
+
         freq = [0] * 256
         runFreq = [0] * 256
 
@@ -10,9 +13,16 @@ class Solution:
         for i in range(j):
             runFreq[ord(s2[i])] += 1
 
-        for i in range(len(s2)):
+        for i in range(j, len(s2)):
+            if freq == runFreq:
+                return True
+            else:
+                runFreq[ord(s2[i])] += 1
+                runFreq[ord(s2[i-j])] -= 1
+
+        return freq == runFreq
 
 
 
 sol = Solution()
-sol.checkInclusion("ab", "eidbaooo")
+print(sol.checkInclusion("adc", "dcda"))
