@@ -8,17 +8,15 @@ class Solution:
 
         stack = []
         for asteroid in asteroids:
-            skip = False
             while stack and asteroid < 0 < stack[-1]:
-                bigAsteroid = stack[-1] + asteroid
-                if bigAsteroid <= 0:
+                collision = stack[-1] + asteroid
+                if collision < 0:
                     stack.pop()
-                    if asteroid == 0:
-                        skip = True
-                else:
-                    break
-
-            if not skip:
+                    continue
+                elif collision == 0:
+                    stack.pop()
+                break
+            else:
                 stack.append(asteroid)
 
         return stack
