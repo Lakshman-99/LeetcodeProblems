@@ -5,11 +5,13 @@ class Solution:
     def largestRectangleArea(self, heights: List[int]) -> int:
         stack = []
         maxArea = 0
+        n = len(heights)
 
-        for idx, height in enumerate(heights):
-            while stack and (idx == len(heights)-1 or heights[stack[-1]] >= height):
-                start = stack.pop()
-                maxArea = max(maxArea, height * (idx - start))
+        for idx in range(n + 1):
+            while stack and (idx == n or heights[stack[-1]] >= heights[idx]):
+                height = heights[stack.pop()]
+                width = idx if not stack else idx - stack[-1] - 1
+                maxArea = max(maxArea, height * width)
 
             stack.append(idx)
 
@@ -17,4 +19,4 @@ class Solution:
 
 
 sol = Solution()
-print(sol.largestRectangleArea([2,1,5,6,2,3]))
+print(sol.largestRectangleArea([2,1,5,6,5,3]))
