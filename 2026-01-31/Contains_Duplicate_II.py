@@ -4,21 +4,17 @@ from typing import List
 
 class Solution:
     def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
-        curLen = 0
-        tracker = defaultdict(int)
-        for i, num in enumerate(nums):
-            if curLen <= k:
-                if num in tracker:
-                    return True
-                tracker[num] += 1
-                curLen += 1
+        l = 0
+        seen = set()
+        for r in range(len(nums)):
+            if r - l > k:
+                seen.remove(nums[l])
+                l += 1
 
-            if curLen > k:
-                key = nums[i-k]
-                tracker[key] -= 1
-                curLen -= 1
-                if tracker[key] == 0:
-                    tracker.pop(key)
+            if nums[r] in seen:
+                return True
+
+            seen.add(nums[r])
 
         return False
 
