@@ -10,26 +10,23 @@ class Solution:
 
         dummy = ListNode(0, head)
         grpPrev = dummy
-        count = 0
 
-        cur = dummy.next
-        while cur is not None:
-            count += 1
-            cur = cur.next
-
-        while count >= k:
-            cur = grpPrev.next
+        while True:
             kth = self.getKth(grpPrev, k)
-            prev = kth.next if kth else None
+            if not kth:
+                break
 
-            while cur != kth:
+            grpNext = kth.next
+            prev, cur = kth.next, grpPrev.next
+            while cur != grpNext:
                 temp = cur.next
                 cur.next = prev
                 prev = cur
                 cur = temp
 
+            temp = grpPrev.next
             grpPrev.next = prev
-            grpPrev = kth
+            grpPrev = temp
 
         return dummy.next
 
