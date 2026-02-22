@@ -2,61 +2,42 @@ import string
 
 
 class Node:
-    def __init__(self, val=None):
-        self.val = val
+    def __init__(self):
         self.is_leaf = False
         self.children = {}
 
 class Trie:
 
     def __init__(self):
-        self.char_link = {}
+        self.root = Node()
 
     def insert(self, word: str) -> None:
-        if not word:
-            return
+        cur = self.root
+        for ch in word:
+            if ch not in cur.children:
+                cur.children[ch] = Node()
 
-        if word[0] not in self.char_link:
-            self.char_link[word[0]] = Node(word[0])
+            cur = cur.children[ch]
 
-        node = self.char_link[word[0]]
-        for i in range(1, len(word)):
-            ch = word[i]
-            if ch not in node.children:
-                node.children[ch] = Node(ch)
-
-            node = node.children[ch]
-
-        node.is_leaf = True
+        cur.is_leaf = True
 
     def search(self, word: str) -> bool:
-        if not word:
-            return True
-
-        node = self.char_link[word[0]]
-        for i in range(1, len(word)):
-            ch = word[i]
-            if ch not in node.children:
+        cur = self.root
+        for ch in word:
+            if ch not in cur.children:
                 return False
 
-            node = node.children[ch]
+            cur = cur.children[ch]
 
-        return node.is_leaf
+        return cur.is_leaf
 
     def startsWith(self, prefix: str) -> bool:
-        if not prefix:
-            return True
-
-        if prefix[0] not in self.char_link:
-            return False
-
-        node = self.char_link[prefix[0]]
-        for i in range(1, len(prefix)):
-            ch = prefix[i]
-            if ch not in node.children:
+        cur = self.root
+        for ch in prefix:
+            if ch not in cur.children:
                 return False
 
-            node = node.children[ch]
+            cur = cur.children[ch]
 
         return True
 
