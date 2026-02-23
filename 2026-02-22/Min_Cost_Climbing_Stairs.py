@@ -6,13 +6,15 @@ class Solution:
         if len(cost) <= 2:
             return min(cost)
 
-        s1 = cost[0]
-        s2 = cost[1]
+        next = 0
+        cur = cost[-1]
 
-        for i in range(2, len(cost)):
-            temp = s2
-            s2 
+        for i in range(len(cost)-2, -1, -1):
+            temp = cur
+            cur = cost[i] + min(cur, next)
+            next = temp
 
+        return min(cur, next)
 
 
 sol = Solution()
