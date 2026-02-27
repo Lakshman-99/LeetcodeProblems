@@ -19,6 +19,14 @@ class Solution:
 
             return dfs(i+1, cur_sum-nums[i]) or dfs(i+1, cur_sum)
 
+        n = len(nums)
+        dp = [[False] * (target+1) for _ in range(n+1)]
+        for i in range(n+1):
+            dp[i][0] = True
+
+        for i in range(n-1,-1,-1):
+
+
         return dfs(0, target)
 
 sol = Solution()
