@@ -22,14 +22,13 @@ class Solution:
         while q:
             for _ in range(len(q)):
                 r, c = q.popleft()
-                if grid[r][c] == 1:
-                    grid[r][c] = 2
-                    fresh -= 1
 
                 for i, j in dirs:
                     R, C = r + i, c + j
-                    if 0 <= R <m and 0 <= C < n and grid[R][C] == 1:
+                    if 0 <= R < m and 0 <= C < n and grid[R][C] == 1:
                         q.append((R, C))
+                        grid[R][C] = 2
+                        fresh -= 1
 
             minutes += 1
 
