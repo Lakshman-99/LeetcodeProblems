@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List
 
 class DSU:
@@ -15,7 +16,7 @@ class DSU:
     def union(self, u, v):
         pu, pv = self.get_parent(u), self.get_parent(v)
         if pu == pv: return False
-        if self.rank(pv) > self.rank(pu):
+        if self.rank[pv] > self.rank[pu]:
              pu, pv = pv, pu
 
         self.parent[pv] = pu
@@ -25,11 +26,26 @@ class DSU:
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
         email_map = {}
-        for i, account in enumerate(accounts):
-            user_name = account[0]
-            for acc in account[1:]:
-                email_map[account[i]] = user_name
+        dsu = DSU(len(accounts))
 
+        for i, account in enumerate(accounts):
+            for email in account[1:]:
+                if email in email_map:
+                    dsu.union(i, email_map[email])
+                else:
+                    email_map[email] = i
+
+        email_group = defaultdict(list)
+        for e, i in email_map.items():
+            parent = dsu.get_parent(i)
+            email_group[parent].append(e)
+
+        res = []
+        for acc, emails in email_group.items():
+            user_name = accounts[acc][0]
+            res.append([user_name] + sorted(emails))
+
+        return res
 
 
 sol = Solution()
