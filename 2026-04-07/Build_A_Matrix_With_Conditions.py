@@ -1,30 +1,25 @@
-from collections import deque
+from collections import deque, defaultdict
 from typing import List
 
 
 class Solution:
     def buildMatrix(self, k: int, rowConditions: List[List[int]], colConditions: List[List[int]]) -> List[List[int]]:
         def get_topo_sort(condition):
-            adj = [[] for _ in range(k)]
-            in_degree = [0] * k
-
-            for v1, v2 in condition:
-                adj[v2-1].append(v1-1)
-                in_degree[v1-1] += 1
-
-            q = deque([i for i in range(k) if in_degree[i] == 0])
-            res = []
-
-            while q:
-                node = q.popleft()
-                res.append(node + 1)
-                for nei in adj[node]:
+            graph = defaultdict(list)
+            in_degree = [0] * (k + 1)
+            for u, v in condition:
+                graph[u].append(v)
+                in_degree[v] += 1
+            queue = deque(i for i in range(1, k + 1) if in_degree[i] == 0)
+            order = []
+            while queue:
+                node = queue.popleft()
+                order.append(node)
+                for nei in graph[node]:
                     in_degree[nei] -= 1
                     if in_degree[nei] == 0:
-                        q.append(nei)
-
-            res.reverse()
-            return res
+                        queue.append(nei)
+            return order if len(order) == k else []
 
         row_order = get_topo_sort(rowConditions)
         col_order = get_topo_sort(colConditions)
@@ -32,11 +27,11 @@ class Solution:
             return []
 
         matrix = [[0] * k for _ in range(k)]
+        row_idx = {val: i for i, val in enumerate(row_order)}
+        col_idx = {val: i for i, val in enumerate(col_order)}
 
-        for i in range(k):
-            for j in range(k):
-                if row_order[i] == col_order[j]:
-                    matrix[i][j] = row_order[i]
+        for val in range(1, k + 1):
+            matrix[row_idx[val]][col_idx[val]] = val
 
         return matrix
 
