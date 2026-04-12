@@ -3,19 +3,35 @@ from typing import List
 
 
 class Solution:
+    def sum_range(self, n1, n2):
+        return (n1 * (n1 + 1)) // 2 - (n2 * (n2 + 1)) // 2
+
     def maxProfit(self, inventory: List[int], orders: int) -> int:
-        inventory = [-1 * num for num in inventory]
-        heapq.heapify(inventory)
+        inventory.sort(reverse=True)
+        inventory.append(0)
         MOD = 10 ** 9 + 7
-        profit = 0
+        profit = i = 0
 
         while orders:
-            cur = -1 * heapq.heappop(inventory)
-            cu
-            profit = (profit + cur) % MOD
+            count = i + 1
+            cur = inventory[i]
+            nxt = inventory[i + 1]
 
-            heapq.heappush(inventory, -1 * (cur - 1))
-            orders -= 1
+            if cur > nxt:
+                total = count * (cur - nxt)
+
+                if orders >= total:
+                    profit += count * self.sum_range(cur, nxt)
+                    orders -= total
+                else:
+                    full, rem = divmod(orders, count)
+                    profit += count * self.sum_range(cur, cur - full)
+                    profit += rem * (cur - full)
+                    orders = 0
+
+                profit %= MOD
+
+            i += 1
 
         return profit
 
