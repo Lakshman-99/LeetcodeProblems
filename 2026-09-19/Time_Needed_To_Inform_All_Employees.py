@@ -9,21 +9,15 @@ class Solution:
                 continue
             adj[mng].append(emp)
 
-        min_time = 0
-        q = deque([headID])
+        total_time = 0
+        q = deque([(headID, 0)])
         while q:
-            cur_len = len(q)
-            max_time = 0
-            for _ in range(cur_len):
-                mng = q.popleft()
-                max_time = max(max_time, informTime[mng])
+            mng, elapsed = q.popleft()
+            total_time = max(total_time, elapsed)
+            for emp in adj[mng]:
+                q.append((emp, elapsed + informTime[mng]))
 
-                for emp in adj[mng]:
-                    q.append(emp)
-
-            min_time += max_time
-
-        return min_time
+        return total_time
 
 
 sol = Solution()
