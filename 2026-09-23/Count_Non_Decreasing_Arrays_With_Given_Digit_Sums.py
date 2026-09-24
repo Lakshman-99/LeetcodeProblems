@@ -13,8 +13,8 @@ class Solution:
             while num:
                 d = num % 10
                 s += d
-                d //= 10
-            sum_map[s].append(num)
+                num //= 10
+            sum_map[s].append(i)
 
         return 0
 
