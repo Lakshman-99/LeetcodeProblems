@@ -1,33 +1,29 @@
+from functools import cache
 from typing import List
 
 
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
         m, n = len(matrix), len(matrix[0])
-        dp1 = [[1] * (n + 1) for _ in range(m + 1)]
-        dp2 = [[1] * (n + 1) for _ in range(m + 1)]
-        longest = 0
+        DIRS = [(0,1),(1,0),(0,-1),(-1,0)]
 
-        for i in range(1, m+1):
-            for j in range(1, n+1):
-                if (j > 1 and matrix[i - 1][j - 1] < matrix[i - 1][j - 2]) and (i > 1 and matrix[i - 1][j - 1] < matrix[i - 2][j - 1]):
-                    dp1[i][j] = max(dp1[i-1][j], dp1[i][j-1]) + 1
-                elif j > 1 and matrix[i - 1][j - 1] < matrix[i - 1][j - 2]:
-                    dp1[i][j] = dp1[i][j - 1] + 1
-                elif i > 1 and matrix[i - 1][j - 1] < matrix[i - 2][j - 1]:
-                    dp1[i][j] = dp1[i - 1][j] + 1
+        @cache
+        def dfs(i, j):
+            res = 1
+            for x, y in DIRS:
+                A, B = i + x, j + y
+                if 0 <= A < m and 0 <= B < n and matrix[i][j] < matrix[A][B]:
+                    res = max(res, dfs(A, B) + 1)
 
-                if (j > 1 and matrix[i - 1][j - 1] > matrix[i - 1][j - 2]) and (i > 1 and matrix[i - 1][j - 1] > matrix[i - 2][j - 1]):
-                    dp2[i][j] = max(dp2[i - 1][j], dp2[i][j - 1]) + 1
-                elif j > 1 and matrix[i - 1][j - 1] > matrix[i - 1][j - 2]:
-                    dp2[i][j] = dp2[i][j - 1] + 1
-                elif i > 1 and matrix[i - 1][j - 1] > matrix[i - 2][j - 1]:
-                    dp2[i][j] = dp2[i - 1][j] + 1
+            return res
 
-                longest = max(longest, dp1[i][j], dp2[i][j])
+        ans = 0
+        for i in range(m):
+            for j in range(n):
+                ans = max(ans, dfs(i, j))
 
-        return longest
+        return ans
 
 
 sol = Solution()
-print(sol.longestIncreasingPath([[9,9,4],[6,6,8],[2,1,1]]))
+print(sol.longestIncreasingPath([[7,8,9],[9,7,6],[7,2,3]]))

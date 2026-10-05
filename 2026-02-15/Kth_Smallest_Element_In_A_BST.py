@@ -5,11 +5,19 @@ from Tree import TreeNode, Tree
 
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        if not root:
-            return 0
+        cur_k = k
+        answer = 0
+        def dfs(node):
+            nonlocal cur_k, answer
+            if not node:
+                return
 
-        left = self.kthSmallest(root.left, k)
-        right = self.kthSmallest(root.right, k)
+            dfs(node.left)
+            cur_k -= 1
+            if cur_k == 0:
+                answer = node.val
+                return
+            dfs(node.right)
 
-        if k == left + right:
-            return
+        dfs(root)
+        return answer

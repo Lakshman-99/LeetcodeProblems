@@ -9,31 +9,30 @@ class Solution:
         if not root:
             return []
 
-        ans = {}
+        lst = []
+
         def dfs(root, depth, order):
             if not root:
                 return
 
-            if order not in ans:
-                ans[order] = []
-
-            ans[order].append((root.val, depth))
-            dfs(root.left, depth+1, order-1)
-            dfs(root.right, depth+1, order+1)
+            lst.append((order, depth, root.val))
+            dfs(root.left, depth + 1, order - 1)
+            dfs(root.right, depth + 1, order + 1)
 
         dfs(root, 0, 0)
 
-        srtd = sorted(ans.items(), key=lambda x: x[0])
-        result = []
+        lst.sort()
+        d = {}
+        for order, depth, val in lst:
+            if order not in d:
+                d[order] = []
 
-        for lst in srtd:
-            s = sorted(lst[1], key=lambda x: (x[1], x[0]))
-            result.append([value for value, _ in s])
+            d[order].append(val)
 
-        return result
+        return list(d.values())
 
 
 sol = Solution()
 tree = Tree()
-node = tree.array_to_tree([8,2,3,4,6,5,7])
+node = tree.array_to_tree([8, 2, 3, 4, 6, 5, 7])
 print(sol.verticalTraversal(node))
